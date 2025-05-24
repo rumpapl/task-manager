@@ -3,8 +3,6 @@
 # editor
 .idea
 
-
-
 # dependencies
 /node_modules
 /.pnp
@@ -36,7 +34,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
+
 
 # vercel
 .vercel
