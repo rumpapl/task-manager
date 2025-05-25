@@ -14,7 +14,6 @@ const FormController = <TFieldValues extends FieldValues = FieldValues>({
   ...controllerProps
 }: FormControllerProps<TFieldValues>) => {
   const required = Boolean(rules?.required);
-
   return (
     <Controller
       {...controllerProps}

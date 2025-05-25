@@ -2,12 +2,13 @@
 
 import { z } from "zod";
 import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { signupUserAction } from "@/actions/auth/signup";
 import { useRouter } from "next/navigation";
-import FormController from "@/components/hoc/form-controller";
-import OutlineLabelInput from "@/components/elements/inputs/outline-label";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { signupUserAction } from "@/actions/auth/signup";
+import { FormController } from "@/components/hoc";
+import { OutlineLabelInput } from "@/components/elements/inputs";
 
 const schema = z.object({
   name: z.string().min(3),
@@ -56,15 +57,15 @@ export const Form = () => {
       <h2 className="text-xl font-bold">Sign Up</h2>
 
       <FormController name="name" control={control}>
-        <OutlineLabelInput label="Name" />
+        <OutlineLabelInput placeholder="Name" />
       </FormController>
 
       <FormController name="email" control={control}>
-        <OutlineLabelInput label="Email" />
+        <OutlineLabelInput placeholder="Email" />
       </FormController>
 
       <FormController name="password" control={control}>
-        <OutlineLabelInput label="Password" type="password" />
+        <OutlineLabelInput placeholder="Password" type="password" />
       </FormController>
 
       {error && <p className="text-red-600">{error}</p>}

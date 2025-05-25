@@ -1,6 +1,7 @@
 import React, { forwardRef } from "react";
 
-interface OutlineLabelInputProps extends React.HTMLAttributes<HTMLDivElement> {
+interface OutlineLabelInputProps
+  extends React.HTMLAttributes<HTMLInputElement> {
   helperText?: string;
   placeholder?: string;
   label?: string;
@@ -21,11 +22,11 @@ const OutlineLabelInput = forwardRef<HTMLInputElement, OutlineLabelInputProps>(
   ) => {
     return (
       <div>
-        <p className=" text-sm mb-2">{label}</p>
+        {Boolean(label) && <p className=" text-sm mb-2">{label}</p>}
         <input
           ref={ref}
-          placeholder={placeholder}
           type={type}
+          placeholder={placeholder}
           className="w-full p-2 border rounded"
           {...other}
         />
