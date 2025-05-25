@@ -5,6 +5,9 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { signupUserAction } from "@/actions/auth/signup";
+import { useRouter } from "next/navigation";
+import FormController from "@/components/hoc/form-controller";
+import OutlineLabelInput from "@/components/elements/inputs/outline-label";
 
 const schema = z.object({
   name: z.string().min(3),
@@ -15,20 +18,33 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export const Form = () => {
+  const router = useRouter();
   const [error, setError] = useState("");
 
+  const defaultValues = {
+    name: "",
+    email: "",
+    password: "",
+  };
+
   const {
-    register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<FormData>({ resolver: zodResolver(schema) });
+    control,
+    formState: { isSubmitting },
+  } = useForm<FormData>({ resolver: zodResolver(schema), defaultValues });
 
   const onSubmit = async (data: FormData) => {
-    console.log(data);
     try {
-      await signupUserAction(data);
-    } catch (err: any) {
-      setError(err.message);
+      const response = await signupUserAction(data);
+      if (response?.status === 201) {
+        router.push("/login");
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      }
+      setError(`An unexpected error occurred.`);
+      console.log({ err });
     }
   };
 
@@ -38,29 +54,18 @@ export const Form = () => {
       className="max-w-md mx-auto mt-10 space-y-4"
     >
       <h2 className="text-xl font-bold">Sign Up</h2>
-      <input
-        {...register("name")}
-        placeholder="Name"
-        className="w-full p-2 border rounded"
-      />
-      {errors.name && <p className="text-red-500">{errors.name.message}</p>}
 
-      <input
-        {...register("email")}
-        placeholder="Email"
-        className="w-full p-2 border rounded"
-      />
-      {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+      <FormController name="name" control={control}>
+        <OutlineLabelInput label="Name" />
+      </FormController>
 
-      <input
-        {...register("password")}
-        placeholder="Password"
-        className="w-full p-2 border rounded"
-        type="password"
-      />
-      {errors.password && (
-        <p className="text-red-500">{errors.password.message}</p>
-      )}
+      <FormController name="email" control={control}>
+        <OutlineLabelInput label="Email" />
+      </FormController>
+
+      <FormController name="password" control={control}>
+        <OutlineLabelInput label="Password" type="password" />
+      </FormController>
 
       {error && <p className="text-red-600">{error}</p>}
       <button

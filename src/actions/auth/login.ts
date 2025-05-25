@@ -21,16 +21,7 @@ export const loginUserAction = async ({ email, password }: loginUserType) => {
     throw new Error("Password doesn't match");
   }
 
-  return jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
+  return jwt.sign({ id: user._id.toString(), email: user.email }, JWT_SECRET, {
     expiresIn: "7d",
   });
-
-  // cookies().set("token", token, {
-  //   httpOnly: true,
-  //   secure: process.env.NODE_ENV !== "development",
-  //   maxAge: 60 * 60 * 24 * 7,
-  //   path: "/",
-  // });
-
-  // return { message: "Login successful" };
 };

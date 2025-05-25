@@ -21,13 +21,11 @@ export const signupUserAction = async ({
 
   const hashedPassword = await bcrypt.hash(password, 12);
 
-  await db
-    .collection(COLLECTION_NAME)
-    .insertOne({
-      name,
-      email,
-      password: hashedPassword,
-      createdAt: new Date(),
-    });
-  return { message: "User created successfully." };
+  await db.collection(COLLECTION_NAME).insertOne({
+    name,
+    email,
+    password: hashedPassword,
+    createdAt: new Date(),
+  });
+  return { message: "User created successfully.", status: 201 };
 };
