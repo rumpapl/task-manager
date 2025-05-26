@@ -3,18 +3,21 @@
 import getDatabase from "@/lib/mongodb";
 import bcrypt from "bcryptjs";
 
-import { signupUserType } from "@/types";
+import { signUpFormDataType } from "@/features/auth/types";
+import { USER_COLLECTION_NAME } from "@/features/auth/config";
 
-const COLLECTION_NAME: string = "user";
+const COLLECTION_NAME: string = USER_COLLECTION_NAME;
 
 export const signupUserAction = async ({
   name,
   email,
   password,
-}: signupUserType) => {
+}: signUpFormDataType) => {
   const db = await getDatabase();
 
-  const existingUser = await db.collection("users").findOne({ email: email });
+  const existingUser = await db
+    .collection(COLLECTION_NAME)
+    .findOne({ email: email });
   if (existingUser) {
     throw new Error("User already exist");
   }

@@ -1,14 +1,17 @@
-"use server";
-
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import getDatabase from "@/lib/mongodb";
-import { loginUserType } from "@/types";
+
+import { loginFormDataType } from "@/features/auth/types";
+import { USER_COLLECTION_NAME } from "@/features/auth/config";
 
 const JWT_SECRET = process.env.JWT_SECRET || "";
-const COLLECTION_NAME: string = "user";
+const COLLECTION_NAME: string = USER_COLLECTION_NAME;
 
-export const loginUserAction = async ({ email, password }: loginUserType) => {
+export const loginUserService = async ({
+  email,
+  password,
+}: loginFormDataType) => {
   const db = await getDatabase();
 
   const user = await db.collection(COLLECTION_NAME).findOne({ email });

@@ -1,7 +1,7 @@
-import Form from "./form";
+import { SignupForm } from "@/features/auth/components";
 
 const SignupPage = () => {
-  return <Form />;
+  return <SignupForm />;
 };
 
 export default SignupPage;

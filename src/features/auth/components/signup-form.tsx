@@ -1,24 +1,18 @@
 "use client";
 
-import { z } from "zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { signupUserAction } from "@/actions/auth/signup";
 import { FormController } from "@/components/hoc";
 import { OutlineLabelInput } from "@/components/elements/inputs";
 
-const schema = z.object({
-  name: z.string().min(3),
-  email: z.string().email(),
-  password: z.string().min(6),
-});
+import { signupUserAction } from "@/features/auth/actions/signup";
+import { signUpFormDataType } from "@/features/auth/types";
+import { signupSchema } from "@/features/auth/validators";
 
-type FormData = z.infer<typeof schema>;
-
-export const Form = () => {
+export const SignupForm = () => {
   const router = useRouter();
   const [error, setError] = useState("");
 
@@ -32,9 +26,12 @@ export const Form = () => {
     handleSubmit,
     control,
     formState: { isSubmitting },
-  } = useForm<FormData>({ resolver: zodResolver(schema), defaultValues });
+  } = useForm<signUpFormDataType>({
+    resolver: zodResolver(signupSchema),
+    defaultValues,
+  });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: signUpFormDataType) => {
     try {
       const response = await signupUserAction(data);
       if (response?.status === 201) {
@@ -43,9 +40,10 @@ export const Form = () => {
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
+      } else {
+        setError(`An unexpected error occurred.`);
+        console.log({ err });
       }
-      setError(`An unexpected error occurred.`);
-      console.log({ err });
     }
   };
 
@@ -80,4 +78,4 @@ export const Form = () => {
   );
 };
 
-export default Form;
+export default SignupForm;
