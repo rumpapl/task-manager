@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { FormController } from "@/components/hoc";
 import { OutlineLabelInput } from "@/components/elements/inputs";
@@ -13,7 +13,6 @@ import { loginFormDataType } from "@/features/auth/types";
 
 export const LoginForm = () => {
   const router = useRouter();
-  const [error, setError] = useState("");
 
   const defaultValues = {
     email: "",
@@ -41,15 +40,17 @@ export const LoginForm = () => {
       console.log(res);
       if (!res.ok) {
         const error = await res.json();
-        setError(error.message || "Login Failed!");
+        toast.error(error.message || "Login Failed!");
       } else {
+        const response = await res.json();
+        toast.success(response.message);
         router.push("/");
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setError(err.message);
+        toast.error(err.message);
       } else {
-        setError("An unexpected error occurred.");
+        toast.error("An unexpected error occurred.");
         console.log({ err });
       }
     }
@@ -68,7 +69,7 @@ export const LoginForm = () => {
       <FormController name="password" control={control}>
         <OutlineLabelInput placeholder="Password" type="password" />
       </FormController>
-      {error && <p className="text-red-600">{error}</p>}
+
       <button
         type="submit"
         disabled={isSubmitting}

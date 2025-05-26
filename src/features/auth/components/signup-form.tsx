@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 
 import { FormController } from "@/components/hoc";
 import { OutlineLabelInput } from "@/components/elements/inputs";
@@ -14,7 +14,6 @@ import { signupSchema } from "@/features/auth/validators";
 
 export const SignupForm = () => {
   const router = useRouter();
-  const [error, setError] = useState("");
 
   const defaultValues = {
     name: "",
@@ -35,13 +34,14 @@ export const SignupForm = () => {
     try {
       const response = await signupUserAction(data);
       if (response?.status === 201) {
+        toast.success(response.message);
         router.push("/login");
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setError(err.message);
+        toast.error(err.message);
       } else {
-        setError(`An unexpected error occurred.`);
+        toast.error(`An unexpected error occurred.`);
         console.log({ err });
       }
     }
@@ -66,7 +66,6 @@ export const SignupForm = () => {
         <OutlineLabelInput placeholder="Password" type="password" />
       </FormController>
 
-      {error && <p className="text-red-600">{error}</p>}
       <button
         type="submit"
         disabled={isSubmitting}
