@@ -1,18 +1,19 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { loginUserService } from "@/features/auth/services";
+import { setCookies } from "@/app/api/auth/helpers";
 
-export const POST = async (req: Request) => {
+export const POST = async (req: NextRequest) => {
   try {
     const { email, password } = await req.json();
-    const token = await loginUserService({ email, password });
+    const token: string = await loginUserService({
+      email,
+      password,
+    });
 
     const res = NextResponse.json({ message: "Login successful" });
-    res.cookies.set("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV !== "development",
-      maxAge: 60 * 60 * 24 * 7,
-      path: "/",
-    });
+    if (token) {
+      setCookies(res, token);
+    }
     return res;
   } catch (error) {
     console.log(error);

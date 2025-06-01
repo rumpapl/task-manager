@@ -10,6 +10,7 @@ import { OutlineLabelInput } from "@/components/elements/inputs";
 
 import { loginSchema } from "@/features/auth/validators";
 import { loginFormDataType } from "@/features/auth/types";
+import { login } from "@/features/auth/helpers/api";
 
 export const LoginForm = () => {
   const router = useRouter();
@@ -30,14 +31,7 @@ export const LoginForm = () => {
 
   const onSubmit = async (data: loginFormDataType) => {
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      console.log(res);
+      const res = await login(data);
       if (!res.ok) {
         const error = await res.json();
         toast.error(error.message || "Login Failed!");

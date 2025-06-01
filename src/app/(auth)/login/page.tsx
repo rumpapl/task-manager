@@ -1,7 +1,12 @@
-import { LoginForm } from "@/features/auth/components";
+import { GoogleLoginButton, LoginForm } from "@/features/auth/components";
 
 const LoginPage = () => {
-  return <LoginForm />;
+  return (
+    <>
+      <LoginForm />
+      <GoogleLoginButton />
+    </>
+  );
 };
 
 export default LoginPage;
